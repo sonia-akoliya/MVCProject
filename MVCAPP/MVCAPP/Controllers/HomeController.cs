@@ -53,20 +53,36 @@ namespace MVCAPP.Controllers
         [HttpPost]
         public ActionResult Register(Student student)
         {
-            string query = "insert into Student values(@Name,@Phone,@Email,@Password)";
+            string query = "select Count(*) from Student where Email = @Email";
             using (SqlCommand cmd = new SqlCommand(query, con))
             {
                 cmd.Connection = con;
                 cmd.Parameters.AddWithValue("@Email", student.Email);
-                cmd.Parameters.AddWithValue("@Phone", student.Phone);
-                cmd.Parameters.AddWithValue("@Name", student.Name);
-                cmd.Parameters.AddWithValue("@Password", student.Password);
 
                 con.Open();
-                cmd.ExecuteNonQuery();
-                con.Close();
+                int i = int.Parse(cmd.ExecuteScalar().ToString());
+                if (i > 0)
+                {
+                    ModelState.AddModelError("", "User already Exist");
+                }
+                else
+                {
+                    string query1 = "insert into Student values(@Name,@Phone,@Email,@Password)";
+                    using (SqlCommand cmd1 = new SqlCommand(query1, con))
+                    {
+                        cmd1.Connection = con;
+                        cmd1.Parameters.AddWithValue("@Email", student.Email);
+                        cmd1.Parameters.AddWithValue("@Phone", student.Phone);
+                        cmd1.Parameters.AddWithValue("@Name", student.Name);
+                        cmd1.Parameters.AddWithValue("@Password", student.Password);
 
+                        cmd1.ExecuteNonQuery();
+
+                    }
+                }
+                con.Close();
             }
+
             return View();
         }
     }

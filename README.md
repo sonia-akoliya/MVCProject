@@ -1,6 +1,10 @@
 # MVCProject
 
-# DB script for create table and database
+# Steps to run project
+
+Step 1:- Update the server name in the Web.config file.
+
+Step 2:- Execute the below query.
 
 CREATE DATABASE MVCDB;
 
